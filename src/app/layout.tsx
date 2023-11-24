@@ -13,6 +13,8 @@ import Layout from '@/layout/GlobalLayout';
 
 import StyleRegistry from './StyleRegistry';
 
+export const dynamicParams = false;
+
 const RootLayout = ({ children }: PropsWithChildren) => {
   // get default theme config to use with ssr
   const cookieStore = cookies();
