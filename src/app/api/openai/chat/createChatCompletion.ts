@@ -2,6 +2,7 @@ import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI from 'openai';
 
 import { createErrorResponse } from '@/app/api/openai/errorResponse';
+import { getServerConfig } from '@/config/server';
 import { ChatErrorType } from '@/types/fetch';
 import { OpenAIChatStreamPayload } from '@/types/openai/chat';
 
@@ -20,6 +21,15 @@ export const createChatCompletion = async ({ payload, openai }: CreateChatComple
     name: m.name,
     role: m.role,
   })) as OpenAI.ChatCompletionMessageParam[];
+
+  // 硬编码限制gpt-4的使用
+  if (
+    messages.length > 2 &&
+    openai.apiKey === getServerConfig().OPENAI_API_KEY &&
+    params.model.startsWith('gpt-4')
+  ) {
+    params.model = 'gpt-3.5-turbo-16k';
+  }
 
   // ============  2. send api   ============ //
 
